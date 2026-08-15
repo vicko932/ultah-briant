@@ -278,7 +278,7 @@
                 <div class="light red"></div>
             </div>
             <div class="teaser-text">
-                LIGHTS OUT AND AWAY WE GO!<br>Ada pesan penting dari papi di garis finish...
+                LIGHTS OUT AND AWAY WE GO!<br>Ada pesan penting di garis finish...
             </div>
             <button class="btn-action" onclick="openSurprise()">START ENGINE 🏁</button>
         </div>
@@ -342,35 +342,41 @@
             }
         }
 
-        // ENGINE SOUND
+        // ENGINE SOUND PERBAIKAN (Mati Total Dalam 1.2 Detik)
         function playEngineSound() {
             initAudio();
             if (!audioCtx) return;
 
+            const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.8);
-            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 1.5);
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 0.6);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 1.1);
 
-            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 1.5);
+            osc.start(now);
+            osc.stop(now + 1.2);
+
+            // Putus koneksi agar tidak merembet suara frekuensi tinggi
+            setTimeout(() => {
+                osc.disconnect();
+                gain.disconnect();
+            }, 1250);
         }
 
-        // PUTAR VOICE MP3 (MURNI AUDIO MP3 TANPA BEEP KODINGAN)
+        // PUTAR MP3
         function playRadioMessage() {
             initAudio();
             document.getElementById('radio-box').style.display = 'block';
 
-            // Hentikan pemutaran sebelumnya jika tombol diklik ulang
             if (currentVoiceAudio) {
                 currentVoiceAudio.pause();
                 currentVoiceAudio.currentTime = 0;
@@ -378,10 +384,10 @@
 
             currentVoiceAudio = new Audio('pit-crew-voice.mp3');
             currentVoiceAudio.volume = 1.0;
-            currentVoiceAudio.loop = false; // Memastikan audio HANYA diputar 1 kali
+            currentVoiceAudio.loop = false;
 
             currentVoiceAudio.play().catch(err => {
-                console.error("Gagal memutar pit-crew-voice.mp3. Pastikan file ada di folder yang sama.", err);
+                console.error("Gagal memutar pit-crew-voice.mp3.", err);
             });
         }
 
