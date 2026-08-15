@@ -26,9 +26,9 @@
         .card {
             background: linear-gradient(145deg, #161b22, #0d1117);
             border-radius: 24px;
-            padding: 30px 24px;
+            padding: 25px 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             box-shadow: 0 15px 35px rgba(225, 6, 0, 0.25);
             border: 1px solid #30363d;
             text-align: center;
@@ -80,7 +80,6 @@
             line-height: 1.4;
             color: #f0f6fc;
             margin-bottom: 30px;
-            letter-spacing: 0.5px;
         }
 
         /* HALAMAN UTAMA */
@@ -95,17 +94,16 @@
             background: linear-gradient(90deg, #e10600, #ff4500);
             color: #fff;
             font-weight: 800;
-            font-size: 0.8rem;
-            padding: 6px 16px;
+            font-size: 0.75rem;
+            padding: 5px 14px;
             border-radius: 20px;
             letter-spacing: 2px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.3);
         }
 
         h1.title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: #8b949e;
@@ -113,39 +111,139 @@
         }
 
         h1.name {
-            font-size: 2.3rem;
+            font-size: 2rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: #ffffff;
             font-weight: 900;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 0 0 15px rgba(225, 6, 0, 0.6);
         }
 
-        /* FOCUS UCAPAN UTAMA */
         .hero-message {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 24px 20px;
-            font-size: 1.05rem;
-            line-height: 1.7;
+            padding: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
             color: #e6edf3;
-            margin: 20px 0;
-            text-align: center;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
         }
 
-        .hero-message strong {
+        .hero-message strong { color: #00d2be; }
+
+        /* INTERACTIVE SECTIONS */
+        .section-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .radio-box {
+            display: none;
+            background: rgba(0, 210, 190, 0.1);
+            border: 1px solid #00d2be;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.85rem;
             color: #00d2be;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        /* PIT STOP GAME */
+        .pit-lights {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .game-light {
+            width: 16px;
+            height: 16px;
+            background: #333;
+            border-radius: 50%;
+            border: 1px solid #555;
+        }
+
+        .game-light.active {
+            background: #e10600;
+            box-shadow: 0 0 10px #e10600;
+        }
+
+        .game-result {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 8px;
+            color: #ffd700;
+        }
+
+        /* WISHES BOX */
+        .wish-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #fff;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .wish-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .wish-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: left;
+            border-left: 3px solid #00d2be;
         }
 
         .btn-action {
             background: linear-gradient(45deg, #e10600, #ff4500);
             color: white;
             border: none;
-            padding: 16px 28px;
-            font-size: 1.05rem;
+            padding: 14px 24px;
+            font-size: 1rem;
             font-weight: 800;
             border-radius: 30px;
             cursor: pointer;
@@ -153,11 +251,6 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            transition: transform 0.1s, box-shadow 0.2s;
-        }
-
-        .btn-action:active {
-            transform: scale(0.96);
         }
 
         canvas {
@@ -175,7 +268,7 @@
     <div class="card">
         <div class="f1-stripe"></div>
 
-        <!-- LANDING PAGE: RED LIGHTS READY -->
+        <!-- LANDING PAGE -->
         <div id="landing-page">
             <div class="lights-container">
                 <div class="light red"></div>
@@ -190,7 +283,7 @@
             <button class="btn-action" onclick="openSurprise()">START ENGINE 🏁</button>
         </div>
 
-        <!-- HALAMAN UTAMA: FOCUS UCAPAN -->
+        <!-- HALAMAN UTAMA -->
         <div id="main-page">
             <div class="badge">🏆 CHAMPION OF THE DAY</div>
             
@@ -200,57 +293,186 @@
             <div class="hero-message">
                 Selamat ulang tahun ya jagoannya papi! Semoga di umur yang baru ini makin kenceng ngejar semua cita-cita, makin pinter, dan selalu dapet <strong>Podium P1</strong> di setiap hal yang adek lakukan! 🏁
             </div>
+
+            <!-- SECTION 1: TEAM RADIO -->
+            <div class="section-box">
+                <div class="section-title">📻 Team Radio</div>
+                <button class="btn-secondary" onclick="playRadioMessage()">PLAY RADIO MESSAGE</button>
+                <div id="radio-box" class="radio-box">
+                    <strong>PIT CREW:</strong> "Radio check! Box, box! Happy Birthday Briant! Keep pushing, the P1 trophy is yours today! Over."
+                </div>
+            </div>
+
+            <!-- SECTION 2: PIT STOP CHALLENGE -->
+            <div class="section-box">
+                <div class="section-title">⏱️ Pit Stop Reflex Challenge</div>
+                <div class="pit-lights">
+                    <div class="game-light"></div>
+                    <div class="game-light"></div>
+                    <div class="game-light"></div>
+                    <div class="game-light"></div>
+                    <div class="game-light"></div>
+                </div>
+                <button id="game-btn" class="btn-secondary" onclick="handleGameClick()">START PIT STOP</button>
+                <div id="game-result" class="game-result"></div>
+            </div>
+
+            <!-- SECTION 3: WISHES BOARD -->
+            <div class="section-box">
+                <div class="section-title">💬 Kirim Doa / Harapan</div>
+                <input type="text" id="wish-input" class="wish-input" placeholder="Tulis doa/pesan kamu..." />
+                <button class="btn-secondary" onclick="addWish()">KIRIM DOA 🚀</button>
+                <div id="wish-list" class="wish-list"></div>
+            </div>
         </div>
 
         <canvas id="confetti"></canvas>
     </div>
 
     <script>
-        function playEngineSound() {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            if (!ctx) return;
+        let audioCtx;
 
-            // Suara Deru Mesin F1 saat Start
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(120, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.8);
-            osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 1.5);
-
-            gain.gain.setValueAtTime(0.25, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 1.5);
-
-            // Nada Happy Birthday setelah deru mesin
-            setTimeout(() => {
-                const notes = [
-                    { f: 264, d: 0.3 }, { f: 264, d: 0.3 }, { f: 297, d: 0.6 }, { f: 264, d: 0.6 }, { f: 352, d: 0.6 }, { f: 330, d: 1.0 },
-                    { f: 264, d: 0.3 }, { f: 264, d: 0.3 }, { f: 297, d: 0.6 }, { f: 264, d: 0.6 }, { f: 396, d: 0.6 }, { f: 352, d: 1.0 }
-                ];
-                let currentTime = ctx.currentTime;
-                notes.forEach(note => {
-                    const nOsc = ctx.createOscillator();
-                    const nGain = ctx.createGain();
-                    nOsc.type = 'triangle';
-                    nOsc.frequency.setValueAtTime(note.f, currentTime);
-                    nGain.gain.setValueAtTime(0.2, currentTime);
-                    nGain.gain.exponentialRampToValueAtTime(0.001, currentTime + note.d);
-                    nOsc.connect(nGain);
-                    nGain.connect(ctx.destination);
-                    nOsc.start(currentTime);
-                    nOsc.stop(currentTime + note.d);
-                    currentTime += note.d + 0.05;
-                });
-            }, 1000);
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
 
+        // ENGINE SOUND
+        function playEngineSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.8);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 1.5);
+
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 1.5);
+        }
+
+        // BEEP VIA KODING + VOICE MP3
+        function playRadioMessage() {
+            initAudio();
+            document.getElementById('radio-box').style.display = 'block';
+
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+
+            // 1. DUAL-TONE CHIRP BEEP (Murni Kodingan JS)
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const beepGain = audioCtx.createGain();
+
+            osc1.type = 'sine';
+            osc2.type = 'triangle';
+
+            osc1.frequency.setValueAtTime(1800, now);
+            osc1.frequency.exponentialRampToValueAtTime(900, now + 0.12);
+
+            osc2.frequency.setValueAtTime(2400, now);
+            osc2.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
+
+            beepGain.gain.setValueAtTime(0.3, now);
+            beepGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+            osc1.connect(beepGain);
+            osc2.connect(beepGain);
+            beepGain.connect(audioCtx.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.15);
+
+            // 2. PUTAR FILE VOICE MP3 (Setelah Beep Selesai)
+            setTimeout(() => {
+                const voiceAudio = new Audio('pit-crew-voice.mp3');
+                voiceAudio.volume = 1.0;
+                voiceAudio.play().catch(err => {
+                    console.error("Gagal memutar pit-crew-voice.mp3. Pastikan file ada di folder yang sama.", err);
+                });
+            }, 180);
+        }
+
+        // PIT STOP MINI GAME
+        let gameState = 'idle'; 
+        let startTime, timerId;
+
+        function handleGameClick() {
+            initAudio();
+            const btn = document.getElementById('game-btn');
+            const result = document.getElementById('game-result');
+            const lights = document.querySelectorAll('.game-light');
+
+            if (gameState === 'idle') {
+                gameState = 'waiting';
+                btn.innerText = 'WAIT FOR LIGHTS OUT...';
+                result.innerText = '';
+                
+                let lightIndex = 0;
+                lights.forEach(l => l.classList.remove('active'));
+
+                timerId = setInterval(() => {
+                    if (lightIndex < 5) {
+                        lights[lightIndex].classList.add('active');
+                        lightIndex++;
+                    } else {
+                        clearInterval(timerId);
+                        const randomDelay = Math.random() * 2000 + 1000;
+                        setTimeout(() => {
+                            lights.forEach(l => l.classList.remove('active'));
+                            gameState = 'ready';
+                            startTime = Date.now();
+                            btn.innerText = 'RELEASE NOW! 🏁';
+                        }, randomDelay);
+                    }
+                }, 800);
+
+            } else if (gameState === 'waiting') {
+                clearInterval(timerId);
+                lights.forEach(l => l.classList.remove('active'));
+                gameState = 'idle';
+                btn.innerText = 'TRY AGAIN';
+                result.innerText = '❌ Jump Start! Jangan buru-buru.';
+            } else if (gameState === 'ready') {
+                const reactionTime = ((Date.now() - startTime) / 1000).toFixed(3);
+                gameState = 'idle';
+                btn.innerText = 'PLAY AGAIN';
+                result.innerText = `⚡ Pit Stop Time: ${reactionTime}s! World Class! 🏆`;
+                createConfetti();
+                updateConfetti();
+            }
+        }
+
+        // WISHES BOARD
+        function addWish() {
+            const input = document.getElementById('wish-input');
+            const list = document.getElementById('wish-list');
+            
+            if (input.value.trim() !== '') {
+                const item = document.createElement('div');
+                item.className = 'wish-item';
+                item.innerText = input.value;
+                list.prepend(item);
+                input.value = '';
+            }
+        }
+
+        // CONFETTI EFEK
         const canvas = document.getElementById('confetti');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -264,7 +486,7 @@
         function createConfetti() {
             particles = [];
             const colors = ['#e10600', '#00d2be', '#ffffff', '#ffd700'];
-            for (let i = 0; i < 80; i++) {
+            for (let i = 0; i < 70; i++) {
                 particles.push({
                     x: canvas.width / 2,
                     y: canvas.height / 2,
@@ -291,6 +513,7 @@
         }
 
         function openSurprise() {
+            initAudio();
             document.getElementById('landing-page').style.display = 'none';
             
             const mainPage = document.getElementById('main-page');
