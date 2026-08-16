@@ -1,342 +1,416 @@
-<!-- METRICS & MINIGAME CONTAINER -->
-<div class="game-wrapper">
-  <div class="game-header">
-    <h3>PADDOCK VISUAL TEST: SPOT THE DIFFERENCE</h3>
-    <p>Temukan 4 perbedaan antara gambar Kiri dan Kanan sebelum waktu habis!</p>
-    
-    <div class="game-stats">
-      <span>Ditemukan: <strong id="found-count">0</strong> / 4</span>
-      <span>Waktu: <strong id="game-timer">30</strong>s</span>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Victory Paddock & Minigame</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0a0a0c;
+      color: #ffffff;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      color: #ff3e3e;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #8a8a93;
+      font-size: 1rem;
+    }
+
+    /* CONTAINER UTAMA MINIGAME */
+    .game-wrapper {
+      background: #121214;
+      border: 1px solid #2a2a30;
+      border-radius: 12px;
+      padding: 24px;
+      width: 100%;
+      max-width: 640px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .game-header h3 {
+      margin: 0 0 6px 0;
+      color: #ff3e3e;
+      letter-spacing: 1px;
+      font-size: 1.25rem;
+    }
+
+    .game-header p {
+      font-size: 0.9rem;
+      color: #a0a0ab;
+      margin-bottom: 15px;
+    }
+
+    .game-stats {
+      display: flex;
+      justify-content: space-around;
+      background: #1a1a20;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      border: 1px solid #282830;
+    }
+
+    .game-stats strong {
+      color: #00ff88;
+    }
+
+    .canvas-container {
+      width: 100%;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      background: #000;
+      border-radius: 8px;
+      border: 2px solid #333;
+      touch-action: manipulation;
+    }
+
+    canvas {
+      cursor: crosshair;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .game-controls {
+      margin-top: 18px;
+    }
+
+    #reset-btn {
+      background: #ff3e3e;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    #reset-btn:hover {
+      background: #d62828;
+    }
+
+    #reset-btn:active {
+      transform: scale(0.98);
+    }
+
+    .game-message {
+      margin-top: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    .game-message.win {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid #00ff88;
+    }
+
+    .game-message.lose {
+      background: rgba(255, 62, 62, 0.15);
+      color: #ff3e3e;
+      border: 1px solid #ff3e3e;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #555560;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PADDOCK ZONE</h1>
+    <p>Uji ketelitian pandangan kamu di lintasan balap!</p>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- MINIGAME: PADDOCK VISUAL TEST (SPOT THE DIFFERENCE)            -->
+  <!-- ============================================================== -->
+  <div class="game-wrapper">
+    <div class="game-header">
+      <h3>PADDOCK VISUAL TEST: SPOT THE DIFFERENCE</h3>
+      <p>Temukan 4 perbedaan antara gambar Kiri dan Kanan sebelum waktu habis!</p>
+      
+      <div class="game-stats">
+        <span>Ditemukan: <strong id="found-count">0</strong> / 4</span>
+        <span>Waktu: <strong id="game-timer">30</strong>s</span>
+      </div>
     </div>
-  </div>
 
-  <!-- CANVAS BOX -->
-  <div class="canvas-container">
-    <canvas id="spot-canvas" width="600" height="300"></canvas>
-  </div>
+    <!-- CANVAS BOX -->
+    <div class="canvas-container">
+      <canvas id="spot-canvas" width="600" height="300"></canvas>
+    </div>
 
-  <div class="game-controls">
-    <button id="reset-btn" onclick="initSpotGame()">Main Lagi / Reset</button>
-  </div>
-  
-  <div id="game-message" class="game-message hidden"></div>
-</div>
-
-<style>
-  .game-wrapper {
-    background: #121214;
-    border: 1px solid #2a2a30;
-    border-radius: 12px;
-    padding: 20px;
-    max-width: 640px;
-    margin: 20px auto;
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-  }
-
-  .game-header h3 {
-    margin: 0 0 6px 0;
-    color: #ff3e3e;
-    letter-spacing: 1px;
-  }
-
-  .game-header p {
-    font-size: 0.9rem;
-    color: #a0a0ab;
-    margin-bottom: 15px;
-  }
-
-  .game-stats {
-    display: flex;
-    justify-content: space-around;
-    background: #1a1a20;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 1rem;
-    margin-bottom: 15px;
-  }
-
-  .game-stats strong {
-    color: #00ff88;
-  }
-
-  .canvas-container {
-    width: 100%;
-    overflow-x: auto;
-    display: flex;
-    justify-content: center;
-    background: #000;
-    border-radius: 8px;
-    border: 2px solid #333;
-  }
-
-  canvas {
-    cursor: crosshair;
-    max-width: 100%;
-    height: auto;
-  }
-
-  .game-controls {
-    margin-top: 15px;
-  }
-
-  #reset-btn {
-    background: #ff3e3e;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  #reset-btn:hover {
-    background: #d62828;
-  }
-
-  .game-message {
-    margin-top: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 6px;
-  }
-
-  .game-message.win {
-    background: rgba(0, 255, 136, 0.15);
-    color: #00ff88;
-    border: 1px solid #00ff88;
-  }
-
-  .game-message.lose {
-    background: rgba(255, 62, 62, 0.15);
-    color: #ff3e3e;
-    border: 1px solid #ff3e3e;
-  }
-
-  .hidden {
-    display: none;
-  }
-</style>
-
-<script>
-  const canvas = document.getElementById('spot-canvas');
-  const ctx = canvas.getContext('2d');
-  
-  let foundDifferences = [];
-  let timeLeft = 30;
-  let timerInterval = null;
-  let isGameOver = false;
-
-  // Koordinat 4 perbedaan di sisi kanan (offset X +300)
-  const differences = [
-    { x: 380, y: 150, r: 25, found: false, name: "Spoiler Hilang" },
-    { x: 500, y: 70,  r: 25, found: false, name: "Warna Bendera Berbeda" },
-    { x: 440, y: 220, r: 25, found: false, name: "Ban Belakang Hilang" },
-    { x: 550, y: 180, r: 25, found: false, name: "Bintang di Langit Tambahan" }
-  ];
-
-  function drawScene() {
-    // Clear Canvas
-    ctx.fillStyle = "#1a1a24";
-    ctx.fillRect(0, 0, 600, 300);
-
-    // Garis Pemisah Kiri & Kanan
-    ctx.strokeStyle = "#ff3e3e";
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(300, 0);
-    ctx.lineTo(300, 300);
-    ctx.stroke();
-
-    // --- GAMBAR SISI KIRI (ASLI) ---
-    drawTrack(0);
-    drawCar(0, true, true, false); // full car
-    drawFlag(0, "#00ff88"); // bendera hijau
-    drawStars(0, false);
-
-    // --- GAMBAR SISI KANAN (ADA 4 PERBEDAAN) ---
-    drawTrack(300);
-    drawCar(300, false, false, false); // PERBEDAAN 1 (tanpa spoiler), PERBEDAAN 3 (tanpa ban belakang)
-    drawFlag(300, "#ff9900"); // PERBEDAAN 2 (bendera oranye)
-    drawStars(300, true); // PERBEDAAN 4 (ada bintang ekstra)
-
-    // Gambar Lingkaran Penanda jika berhasil ditemukan
-    differences.forEach(diff => {
-      if (diff.found) {
-        drawCircle(diff.x, diff.y);
-        drawCircle(diff.x - 300, diff.y); // Lingkaran di sisi kiri juga
-      }
-    });
-  }
-
-  function drawTrack(offsetX) {
-    // Langit
-    ctx.fillStyle = "#0d0d14";
-    ctx.fillRect(offsetX, 0, 300, 180);
+    <div class="game-controls">
+      <button id="reset-btn" onclick="initSpotGame()">Main Lagi / Reset</button>
+    </div>
     
-    // Track/Lasan
-    ctx.fillStyle = "#2c2c36";
-    ctx.fillRect(offsetX, 180, 300, 120);
+    <div id="game-message" class="game-message hidden"></div>
+  </div>
 
-    // Kerb Balap (Merah Putih)
-    for (let i = 0; i < 300; i += 30) {
-      ctx.fillStyle = (i / 30) % 2 === 0 ? "#ff3e3e" : "#ffffff";
-      ctx.fillRect(offsetX + i, 175, 30, 10);
-    }
-  }
+  <footer>
+    <p>&copy; 2026 Paddock Zone. All rights reserved.</p>
+  </footer>
 
-  function drawCar(offsetX, hasSpoiler, hasBackWheel, extra) {
-    // Body Mobil
-    ctx.fillStyle = "#ff2233";
-    ctx.beginPath();
-    ctx.roundRect(offsetX + 80, 190, 140, 35, 10);
-    ctx.fill();
+  <script>
+    (function() {
+      const canvas = document.getElementById('spot-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      let timeLeft = 30;
+      let timerInterval = null;
+      let isGameOver = false;
 
-    // Kokpit
-    ctx.fillStyle = "#111";
-    ctx.beginPath();
-    ctx.arc(offsetX + 140, 190, 18, Math.PI, 0);
-    ctx.fill();
+      // Koordinat 4 perbedaan di sisi kanan (offset X +300)
+      const differences = [
+        { x: 380, y: 150, r: 25, found: false, name: "Spoiler Hilang" },
+        { x: 500, y: 70,  r: 25, found: false, name: "Warna Bendera Berbeda" },
+        { x: 440, y: 222, r: 25, found: false, name: "Ban Belakang Hilang" },
+        { x: 550, y: 50,  r: 25, found: false, name: "Bintang di Langit Tambahan" }
+      ];
 
-    // Spoiler (Perbedaan 1)
-    if (hasSpoiler) {
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(offsetX + 70, 170, 15, 25);
-      ctx.fillRect(offsetX + 60, 168, 30, 6);
-    }
+      function drawScene() {
+        // Clear Background
+        ctx.fillStyle = "#1a1a24";
+        ctx.fillRect(0, 0, 600, 300);
 
-    // Roda Depan
-    ctx.fillStyle = "#444";
-    ctx.beginPath();
-    ctx.arc(offsetX + 190, 225, 16, 0, Math.PI * 2);
-    ctx.fill();
+        // --- GAMBAR SISI KIRI (ASLI) ---
+        drawTrack(0);
+        drawCar(0, true, true); // Ada Spoiler, Ada Ban Belakang
+        drawFlag(0, "#00ff88"); // Bendera Hijau
+        drawStars(0, false);    // 2 Bintang
 
-    // Roda Belakang (Perbedaan 3)
-    if (hasBackWheel) {
-      ctx.beginPath();
-      ctx.arc(offsetX + 110, 225, 16, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
+        // --- GAMBAR SISI KANAN (4 PERBEDAAN) ---
+        drawTrack(300);
+        drawCar(300, false, false); // PERBEDAAN 1 (tanpa spoiler), PERBEDAAN 3 (tanpa ban belakang)
+        drawFlag(300, "#ff9900");   // PERBEDAAN 2 (bendera oranye)
+        drawStars(300, true);       // PERBEDAAN 4 (ada bintang ekstra)
 
-  function drawFlag(offsetX, color) {
-    // Perbedaan 2: Warna Bendera
-    ctx.strokeStyle = "#aaa";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(offsetX + 200, 90);
-    ctx.lineTo(offsetX + 200, 160);
-    ctx.stroke();
+        // Garis Pemisah Kiri & Kanan
+        ctx.strokeStyle = "#ff3e3e";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(300, 0);
+        ctx.lineTo(300, 300);
+        ctx.stroke();
 
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(offsetX + 200, 90);
-    ctx.lineTo(offsetX + 240, 105);
-    ctx.lineTo(offsetX + 200, 120);
-    ctx.fill();
-  }
+        // Gambar Lingkaran Penanda jika berhasil ditemukan
+        differences.forEach(diff => {
+          if (diff.found) {
+            drawCircle(diff.x, diff.y);
+            drawCircle(diff.x - 300, diff.y); // Penanda di sisi kiri juga
+          }
+        });
+      }
 
-  function drawStars(offsetX, hasExtraStar) {
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(offsetX + 40, 40, 3, 3);
-    ctx.fillRect(offsetX + 120, 60, 4, 4);
+      function drawTrack(offsetX) {
+        // Langit
+        ctx.fillStyle = "#0d0d14";
+        ctx.fillRect(offsetX, 0, 300, 180);
+        
+        // Lintasan
+        ctx.fillStyle = "#2c2c36";
+        ctx.fillRect(offsetX, 180, 300, 120);
 
-    // Perbedaan 4: Bintang Ekstra
-    if (hasExtraStar) {
-      ctx.fillStyle = "#ffea00";
-      ctx.fillRect(offsetX + 250, 50, 6, 6);
-    }
-  }
-
-  function drawCircle(x, y) {
-    ctx.strokeStyle = "#00ff88";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(x, y, 22, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  canvas.addEventListener('click', function(e) {
-    if (isGameOver) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    const clickX = (e.clientX - rect.left) * scaleX;
-    const clickY = (e.clientY - rect.top) * scaleY;
-
-    // Normalisasi klik (apabila mengklik gambar kiri, disesuaikan ke koordinat kanan)
-    const normalizedX = clickX < 300 ? clickX + 300 : clickX;
-
-    differences.forEach(diff => {
-      if (!diff.found) {
-        const dist = Math.hypot(normalizedX - diff.x, clickY - diff.y);
-        if (dist < diff.r) {
-          diff.found = true;
-          checkProgress();
+        // Kerb Balap (Merah Putih)
+        for (let i = 0; i < 300; i += 30) {
+          ctx.fillStyle = (i / 30) % 2 === 0 ? "#ff3e3e" : "#ffffff";
+          ctx.fillRect(offsetX + i, 175, 30, 10);
         }
       }
-    });
 
-    drawScene();
-  });
+      function drawCar(offsetX, hasSpoiler, hasBackWheel) {
+        // Bodi Utama
+        ctx.fillStyle = "#ff2233";
+        ctx.beginPath();
+        ctx.roundRect(offsetX + 80, 190, 140, 35, 10);
+        ctx.fill();
 
-  function checkProgress() {
-    const foundCount = differences.filter(d => d.found).length;
-    document.getElementById('found-count').innerText = foundCount;
+        // Kokpit
+        ctx.fillStyle = "#111111";
+        ctx.beginPath();
+        ctx.arc(offsetX + 140, 190, 18, Math.PI, 0);
+        ctx.fill();
 
-    if (foundCount === differences.length) {
-      endGame(true);
-    }
-  }
+        // Perbedaan 1: Spoiler
+        if (hasSpoiler) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(offsetX + 70, 170, 15, 25);
+          ctx.fillRect(offsetX + 60, 168, 30, 6);
+        }
 
-  function startTimer() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      document.getElementById('game-timer').innerText = timeLeft;
+        // Roda Depan
+        ctx.fillStyle = "#444444";
+        ctx.beginPath();
+        ctx.arc(offsetX + 190, 225, 16, 0, Math.PI * 2);
+        ctx.fill();
 
-      if (timeLeft <= 0) {
-        endGame(false);
+        // Perbedaan 3: Roda Belakang
+        if (hasBackWheel) {
+          ctx.beginPath();
+          ctx.arc(offsetX + 110, 225, 16, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
-    }, 1000);
-  }
 
-  function endGame(isWin) {
-    clearInterval(timerInterval);
-    isGameOver = true;
-    const msgBox = document.getElementById('game-message');
-    msgBox.classList.remove('hidden', 'win', 'lose');
+      function drawFlag(offsetX, color) {
+        // Perbedaan 2: Warna Bendera
+        ctx.strokeStyle = "#aaaaaa";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(offsetX + 200, 90);
+        ctx.lineTo(offsetX + 200, 160);
+        ctx.stroke();
 
-    if (isWin) {
-      msgBox.classList.add('win');
-      msgBox.innerText = `VICTORY! Kamu menemukan semua perbedaan dalam ${30 - timeLeft} detik!`;
-    } else {
-      msgBox.classList.add('lose');
-      msgBox.innerText = "TIME OUT! Waktu habis, coba lagi yuk!";
-    }
-  }
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(offsetX + 200, 90);
+        ctx.lineTo(offsetX + 240, 105);
+        ctx.lineTo(offsetX + 200, 120);
+        ctx.fill();
+      }
 
-  function initSpotGame() {
-    clearInterval(timerInterval);
-    timeLeft = 30;
-    isGameOver = false;
-    differences.forEach(d => d.found = false);
+      function drawStars(offsetX, hasExtraStar) {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(offsetX + 40, 40, 3, 3);
+        ctx.fillRect(offsetX + 120, 60, 4, 4);
 
-    document.getElementById('found-count').innerText = "0";
-    document.getElementById('game-timer').innerText = timeLeft;
-    
-    const msgBox = document.getElementById('game-message');
-    msgBox.classList.add('hidden');
+        // Perbedaan 4: Bintang Ekstra
+        if (hasExtraStar) {
+          ctx.fillStyle = "#ffea00";
+          ctx.fillRect(offsetX + 250, 50, 6, 6);
+        }
+      }
 
-    drawScene();
-    startTimer();
-  }
+      function drawCircle(x, y) {
+        ctx.strokeStyle = "#00ff88";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, y, 22, 0, Math.PI * 2);
+        ctx.stroke();
+      }
 
-  // Mulai game saat dimuat
-  initSpotGame();
-</script>
+      canvas.addEventListener('click', function(e) {
+        if (isGameOver) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
+        const clickX = (e.clientX - rect.left) * scaleX;
+        const clickY = (e.clientY - rect.top) * scaleY;
+
+        // Normalisasi koordinat jika mengklik gambar sebelah kiri
+        const normalizedX = clickX < 300 ? clickX + 300 : clickX;
+
+        differences.forEach(diff => {
+          if (!diff.found) {
+            const dist = Math.hypot(normalizedX - diff.x, clickY - diff.y);
+            if (dist < diff.r) {
+              diff.found = true;
+              checkProgress();
+            }
+          }
+        });
+
+        drawScene();
+      });
+
+      function checkProgress() {
+        const foundCount = differences.filter(d => d.found).length;
+        document.getElementById('found-count').innerText = foundCount;
+
+        if (foundCount === differences.length) {
+          endGame(true);
+        }
+      }
+
+      function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          document.getElementById('game-timer').innerText = timeLeft;
+
+          if (timeLeft <= 0) {
+            endGame(false);
+          }
+        }, 1000);
+      }
+
+      function endGame(isWin) {
+        clearInterval(timerInterval);
+        isGameOver = true;
+        const msgBox = document.getElementById('game-message');
+        msgBox.classList.remove('hidden', 'win', 'lose');
+
+        if (isWin) {
+          msgBox.classList.add('win');
+          msgBox.innerText = `VICTORY! Semua perbedaan ketemu dalam ${30 - timeLeft} detik!`;
+        } else {
+          msgBox.classList.add('lose');
+          msgBox.innerText = "TIME OUT! Waktu habis, coba klik tombol reset!";
+        }
+      }
+
+      window.initSpotGame = function() {
+        clearInterval(timerInterval);
+        timeLeft = 30;
+        isGameOver = false;
+        differences.forEach(d => d.found = false);
+
+        document.getElementById('found-count').innerText = "0";
+        document.getElementById('game-timer').innerText = timeLeft;
+        
+        const msgBox = document.getElementById('game-message');
+        msgBox.classList.add('hidden');
+
+        drawScene();
+        startTimer();
+      };
+
+      // Jalankan minigame saat halaman dimuat
+      initSpotGame();
+    })();
+  </script>
+</body>
+</html>
