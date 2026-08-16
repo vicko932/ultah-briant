@@ -33,7 +33,7 @@
             border: 1px solid #30363d;
             text-align: center;
             position: relative;
-            min-height: 540px;
+            min-height: 560px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -252,6 +252,36 @@
             margin-bottom: 12px;
         }
 
+        /* OVERTAKE GAME */
+        #gameCanvas {
+            background: #1e2530;
+            border-radius: 12px;
+            border: 2px solid #30363d;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .btn-control:active { background: rgba(0, 210, 190, 0.4); }
+
         /* WISHES BOX */
         .wish-input {
             width: 100%;
@@ -328,7 +358,7 @@
             font-weight: 600;
         }
 
-        canvas {
+        #confetti {
             position: absolute;
             top: 0;
             left: 0;
@@ -399,7 +429,7 @@
             </div>
         </div>
 
-        <!-- PAGE 4: PODIUM CHAMPAGNE CELEBRATION (NEW) -->
+        <!-- PAGE 4: PODIUM CHAMPAGNE CELEBRATION -->
         <div id="page-4" class="page">
             <div class="feature-card">
                 <div class="section-title">🍾 Podium Champagne Sprayer</div>
@@ -412,8 +442,25 @@
             </div>
         </div>
 
-        <!-- PAGE 5: WISHES BOARD -->
+        <!-- PAGE 5: OVERTAKE GAME (NEW) -->
         <div id="page-5" class="page">
+            <div class="feature-card">
+                <div class="section-title">🏎️ Overtake Master Challenge</div>
+                <div class="section-desc">Hindari mobil lambat di lintasan balap! Gunakan tombol KIRI / KANAN atau panah keyboard untuk beralih jalur!</div>
+                
+                <canvas id="gameCanvas" width="220" height="180"></canvas>
+                <div id="ot-status" class="game-result">Score: 0</div>
+
+                <div class="game-controls">
+                    <button class="btn-control" onclick="moveCar('left')">◀ KIRI</button>
+                    <button class="btn-control" onclick="moveCar('right')">KANAN ▶</button>
+                </div>
+                <button id="ot-start-btn" class="btn-secondary" style="margin-top: 10px;" onclick="startOvertakeGame()">START RACE 🚦</button>
+            </div>
+        </div>
+
+        <!-- PAGE 6: WISHES BOARD -->
+        <div id="page-6" class="page">
             <div class="feature-card">
                 <div class="section-title">💬 Paddock Victory Board</div>
                 <div class="section-desc">Tinggalkan doa, ucapan terbaik, atau harapan kamu untuk Briant di musim umur yang baru ini! 🚀</div>
@@ -426,7 +473,7 @@
         <!-- NAVIGATION FOOTER -->
         <div id="nav-controls" class="nav-controls">
             <button id="btn-prev" class="btn-nav" onclick="changePage(-1)">◀ BACK</button>
-            <span id="page-indicator" class="page-indicator">1 / 5</span>
+            <span id="page-indicator" class="page-indicator">1 / 6</span>
             <button id="btn-next" class="btn-nav" onclick="changePage(1)">NEXT ▶</button>
         </div>
 
@@ -435,7 +482,7 @@
 
     <script>
         let currentPage = 0;
-        const totalPages = 5;
+        const totalPages = 6;
         let audioCtx;
         let sprayCount = 0;
 
@@ -495,6 +542,10 @@
             document.getElementById('page-indicator').innerText = `${currentPage} / ${totalPages}`;
             document.getElementById('btn-prev').disabled = (currentPage === 1);
             document.getElementById('btn-next').disabled = (currentPage === totalPages);
+
+            if (currentPage !== 5 && isOtRunning) {
+                isOtRunning = false;
+            }
         }
 
         function changePage(direction) {
@@ -573,6 +624,94 @@
 
             createConfetti();
             updateConfetti();
+        }
+
+        // OVERTAKE GAME LOGIC
+        const otCanvas = document.getElementById('gameCanvas');
+        const otCtx = otCanvas.getContext('2d');
+        let playerLane = 1; // 0: Kiri, 1: Tengah, 2: Kanan
+        let laneX = [35, 110, 185];
+        let obstacles = [];
+        let otScore = 0;
+        let isOtRunning = false;
+        let otAnimId;
+
+        function startOvertakeGame() {
+            initAudio();
+            playerLane = 1;
+            obstacles = [];
+            otScore = 0;
+            isOtRunning = true;
+            document.getElementById('ot-status').innerText = 'Score: 0';
+            document.getElementById('ot-start-btn').innerText = 'RESTART RACE';
+            
+            if (otAnimId) cancelAnimationFrame(otAnimId);
+            runOvertakeLoop();
+        }
+
+        function moveCar(dir) {
+            if (!isOtRunning) return;
+            if (dir === 'left' && playerLane > 0) playerLane--;
+            if (dir === 'right' && playerLane < 2) playerLane++;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (currentPage === 5 && isOtRunning) {
+                if (e.key === 'ArrowLeft') moveCar('left');
+                if (e.key === 'ArrowRight') moveCar('right');
+            }
+        });
+
+        function runOvertakeLoop() {
+            if (!isOtRunning) return;
+
+            otCtx.clearRect(0, 0, otCanvas.width, otCanvas.height);
+
+            // Draw Lanes
+            otCtx.strokeStyle = '#30363d';
+            otCtx.setLineDash([8, 8]);
+            otCtx.beginPath();
+            otCtx.moveTo(73, 0); otCtx.lineTo(73, otCanvas.height);
+            otCtx.moveTo(146, 0); otCtx.lineTo(146, otCanvas.height);
+            otCtx.stroke();
+            otCtx.setLineDash([]);
+
+            // Spawn Obstacles
+            if (Math.random() < 0.035) {
+                const randomLane = Math.floor(Math.random() * 3);
+                if (!obstacles.some(o => o.y < 50 && o.lane === randomLane)) {
+                    obstacles.push({ lane: randomLane, y: -30, speed: 2.5 + Math.random() });
+                }
+            }
+
+            // Draw Player Car (Emoji 🏎️)
+            otCtx.font = '24px Segoe UI Emoji';
+            otCtx.textAlign = 'center';
+            otCtx.fillText('🏎️', laneX[playerLane], 160);
+
+            // Update & Draw Obstacles (Emoji 🚙)
+            for (let i = 0; i < obstacles.length; i++) {
+                let obs = obstacles[i];
+                obs.y += obs.speed;
+                otCtx.fillText('🚙', laneX[obs.lane], obs.y);
+
+                // Collision Detection
+                if (obs.lane === playerLane && obs.y > 135 && obs.y < 170) {
+                    isOtRunning = false;
+                    document.getElementById('ot-status').innerText = `💥 Crash! Final Score: ${otScore}`;
+                    return;
+                }
+
+                // Passed Obstacle
+                if (obs.y > 190) {
+                    obstacles.splice(i, 1);
+                    i--;
+                    otScore += 10;
+                    document.getElementById('ot-status').innerText = `Score: ${otScore}`;
+                }
+            }
+
+            otAnimId = requestAnimationFrame(runOvertakeLoop);
         }
 
         // WISHES BOARD
