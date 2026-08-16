@@ -1,772 +1,342 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Special F1 Birthday Wish - Briant</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background-color: #0b0e14;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #161b22, #0d1117);
-            border-radius: 24px;
-            padding: 25px 20px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 15px 35px rgba(225, 6, 0, 0.25);
-            border: 1px solid #30363d;
-            text-align: center;
-            position: relative;
-            min-height: 560px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .f1-stripe {
-            height: 6px;
-            width: 100%;
-            background: linear-gradient(90deg, #e10600 50%, #00d2be 50%);
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-        }
-
-        /* PAGE MANAGEMENT */
-        .page {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            padding: 10px 0;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .page.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* LANDING PAGE (PAGE 0) */
-        .lights-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .light {
-            width: 18px;
-            height: 18px;
-            background-color: #333;
-            border-radius: 50%;
-            border: 2px solid #555;
-        }
-
-        .light.red {
-            background-color: #e10600;
-            box-shadow: 0 0 12px #e10600;
-        }
-
-        .teaser-text {
-            font-size: 1.2rem;
-            font-weight: 700;
-            line-height: 1.4;
-            color: #f0f6fc;
-            margin-bottom: 30px;
-        }
-
-        /* DESIGN COMPONENTS */
-        .badge {
-            display: inline-block;
-            background: linear-gradient(90deg, #e10600, #ff4500);
-            color: #fff;
-            font-weight: 800;
-            font-size: 0.75rem;
-            padding: 5px 14px;
-            border-radius: 20px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        h1.title {
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #8b949e;
-            font-weight: 600;
-        }
-
-        h1.name {
-            font-size: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #ffffff;
-            font-weight: 900;
-            margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(225, 6, 0, 0.6);
-        }
-
-        .hero-message {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px 16px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #e6edf3;
-            margin-bottom: 15px;
-        }
-
-        .hero-message strong { color: #00d2be; }
-
-        .feature-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 20px 16px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .section-desc {
-            font-size: 0.85rem;
-            color: #8b949e;
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
-
-        .radio-box {
-            display: none;
-            background: rgba(0, 210, 190, 0.1);
-            border: 1px solid #00d2be;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 0.85rem;
-            color: #00d2be;
-            margin-top: 15px;
-            text-align: left;
-            line-height: 1.4;
-        }
-
-        /* PIT STOP GAME */
-        .pit-lights {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px 0;
-        }
-
-        .game-light {
-            width: 18px;
-            height: 18px;
-            background: #333;
-            border-radius: 50%;
-            border: 1px solid #555;
-        }
-
-        .game-light.active {
-            background: #e10600;
-            box-shadow: 0 0 10px #e10600;
-        }
-
-        .game-result {
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-top: 12px;
-            color: #ffd700;
-        }
-
-        /* PODIUM & CHAMPAGNE */
-        .bottle-container {
-            font-size: 4rem;
-            margin: 15px 0;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.1s ease;
-            user-select: none;
-        }
-
-        .bottle-shake {
-            animation: shake 0.2s infinite;
-        }
-
-        @keyframes shake {
-            0% { transform: rotate(0deg) scale(1.1); }
-            25% { transform: rotate(-8deg) scale(1.1); }
-            75% { transform: rotate(8deg) scale(1.1); }
-            100% { transform: rotate(0deg) scale(1.1); }
-        }
-
-        .spray-counter {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #00d2be;
-            margin-bottom: 12px;
-        }
-
-        /* OVERTAKE GAME */
-        #gameCanvas {
-            background: #1e2530;
-            border-radius: 12px;
-            border: 2px solid #30363d;
-            display: block;
-            margin: 10px auto;
-        }
-
-        .game-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .btn-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 1rem;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .btn-control:active { background: rgba(0, 210, 190, 0.4); }
-
-        /* WISHES BOX */
-        .wish-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-            background: #0d1117;
-            color: #fff;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-            outline: none;
-        }
-
-        .wish-list {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 140px;
-            overflow-y: auto;
-        }
-
-        .wish-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            text-align: left;
-            border-left: 3px solid #00d2be;
-        }
-
-        .btn-action {
-            background: linear-gradient(45deg, #e10600, #ff4500);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            font-size: 1rem;
-            font-weight: 800;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(225, 6, 0, 0.4);
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        /* NAVIGATION CONTROLS */
-        .nav-controls {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            gap: 10px;
-        }
-
-        .btn-nav {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-nav:hover { background: rgba(255, 255, 255, 0.2); }
-        .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        .page-indicator {
-            font-size: 0.8rem;
-            color: #8b949e;
-            font-weight: 600;
-        }
-
-        #confetti {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-    </style>
-</head>
-<body>
-
-    <audio id="radio-player" src="pit-crew-voice.mp3" preload="auto"></audio>
-
-    <div class="card">
-        <div class="f1-stripe"></div>
-
-        <!-- PAGE 0: LANDING PAGE -->
-        <div id="page-0" class="page active">
-            <div class="lights-container">
-                <div class="light red"></div>
-                <div class="light red"></div>
-                <div class="light red"></div>
-                <div class="light red"></div>
-                <div class="light red"></div>
-            </div>
-            <div class="teaser-text">
-                LIGHTS OUT AND AWAY WE GO!<br>Ada pesan penting di garis finish...
-            </div>
-            <button class="btn-action" onclick="openSurprise()">START ENGINE 🏁</button>
-        </div>
-
-        <!-- PAGE 1: UCAPAN BIRTHDAY -->
-        <div id="page-1" class="page">
-            <div class="badge">🏆 CHAMPION OF THE DAY</div>
-            <h1 class="title">HAPPY BIRTHDAY</h1>
-            <h1 class="name">BRIANT! 🏎️💨</h1>
-            <div class="hero-message">
-                Selamat ulang tahun ya jagoannya papi! Semoga di umur yang baru ini makin kenceng ngejar semua cita-cita, makin pinter, dan selalu dapet <strong>Podium P1</strong> di setiap hal yang adek lakukan! 🏁
-            </div>
-        </div>
-
-        <!-- PAGE 2: TEAM RADIO -->
-        <div id="page-2" class="page">
-            <div class="feature-card">
-                <div class="section-title">📻 Team Radio Check</div>
-                <div class="section-desc">Pesan khusus langsung dari Pit Wall untuk pembalap favorit kita! Dengarkan instruksi penting dari crew-mu.</div>
-                <button class="btn-secondary" onclick="playRadioMessage()">PLAY RADIO MESSAGE</button>
-                <div id="radio-box" class="radio-box">
-                    <strong>PIT CREW:</strong> "Radio check! Box, box! Happy Birthday Briant! Keep pushing, the P1 trophy is yours today! Over."
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 3: PIT STOP GAME -->
-        <div id="page-3" class="page">
-            <div class="feature-card">
-                <div class="section-title">⏱️ Pit Stop Reflex Challenge</div>
-                <div class="section-desc">Uji refleks kamu seperti pembalap F1 sungguhan! Tunggu sampai 5 lampu merah padam, lalu tekan tombol secepat mungkin!</div>
-                <div class="pit-lights">
-                    <div class="game-light"></div>
-                    <div class="game-light"></div>
-                    <div class="game-light"></div>
-                    <div class="game-light"></div>
-                    <div class="game-light"></div>
-                </div>
-                <button id="game-btn" class="btn-secondary" onclick="handleGameClick()">START PIT STOP</button>
-                <div id="game-result" class="game-result"></div>
-            </div>
-        </div>
-
-        <!-- PAGE 4: PODIUM CHAMPAGNE CELEBRATION -->
-        <div id="page-4" class="page">
-            <div class="feature-card">
-                <div class="section-title">🍾 Podium Champagne Sprayer</div>
-                <div class="section-desc">P1 Finish! Saatnya selebrasi di atas podium! Klik botol sampanye berkali-kali untuk menyemprotkan champagne!</div>
-                
-                <div id="bottle" class="bottle-container" onclick="popChampagne()">🍾</div>
-                <div id="spray-counter" class="spray-counter">Semprotan: 0x</div>
-
-                <button class="btn-secondary" onclick="popChampagne()">KOKANG & SEMPROT 🥂</button>
-            </div>
-        </div>
-
-        <!-- PAGE 5: OVERTAKE GAME (BALANCED SPEED MODE) -->
-        <div id="page-5" class="page">
-            <div class="feature-card">
-                <div class="section-title">🏎️ Overtake Master Challenge</div>
-                <div class="section-desc">Hindari mobil lambat di lintasan balap! Gunakan tombol KIRI / KANAN untuk beralih jalur!</div>
-                
-                <canvas id="gameCanvas" width="220" height="180"></canvas>
-                <div id="ot-status" class="game-result">Score: 0</div>
-
-                <div class="game-controls">
-                    <button class="btn-control" onclick="moveCar('left')">◀ KIRI</button>
-                    <button class="btn-control" onclick="moveCar('right')">KANAN ▶</button>
-                </div>
-                <button id="ot-start-btn" class="btn-secondary" style="margin-top: 10px;" onclick="startOvertakeGame()">START RACE 🚦</button>
-            </div>
-        </div>
-
-        <!-- PAGE 6: WISHES BOARD -->
-        <div id="page-6" class="page">
-            <div class="feature-card">
-                <div class="section-title">💬 Paddock Victory Board</div>
-                <div class="section-desc">Tinggalkan doa, ucapan terbaik, atau harapan kamu untuk Briant di musim umur yang baru ini! 🚀</div>
-                <input type="text" id="wish-input" class="wish-input" placeholder="Tulis doa/pesan kamu..." />
-                <button class="btn-secondary" onclick="addWish()">KIRIM DOA 🚀</button>
-                <div id="wish-list" class="wish-list"></div>
-            </div>
-        </div>
-
-        <!-- NAVIGATION FOOTER -->
-        <div id="nav-controls" class="nav-controls">
-            <button id="btn-prev" class="btn-nav" onclick="changePage(-1)">◀ BACK</button>
-            <span id="page-indicator" class="page-indicator">1 / 6</span>
-            <button id="btn-next" class="btn-nav" onclick="changePage(1)">NEXT ▶</button>
-        </div>
-
-        <canvas id="confetti"></canvas>
+<!-- METRICS & MINIGAME CONTAINER -->
+<div class="game-wrapper">
+  <div class="game-header">
+    <h3>PADDOCK VISUAL TEST: SPOT THE DIFFERENCE</h3>
+    <p>Temukan 4 perbedaan antara gambar Kiri dan Kanan sebelum waktu habis!</p>
+    
+    <div class="game-stats">
+      <span>Ditemukan: <strong id="found-count">0</strong> / 4</span>
+      <span>Waktu: <strong id="game-timer">30</strong>s</span>
     </div>
+  </div>
 
-    <script>
-        let currentPage = 0;
-        const totalPages = 6;
-        let audioCtx;
-        let sprayCount = 0;
+  <!-- CANVAS BOX -->
+  <div class="canvas-container">
+    <canvas id="spot-canvas" width="600" height="300"></canvas>
+  </div>
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+  <div class="game-controls">
+    <button id="reset-btn" onclick="initSpotGame()">Main Lagi / Reset</button>
+  </div>
+  
+  <div id="game-message" class="game-message hidden"></div>
+</div>
+
+<style>
+  .game-wrapper {
+    background: #121214;
+    border: 1px solid #2a2a30;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 640px;
+    margin: 20px auto;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+  }
+
+  .game-header h3 {
+    margin: 0 0 6px 0;
+    color: #ff3e3e;
+    letter-spacing: 1px;
+  }
+
+  .game-header p {
+    font-size: 0.9rem;
+    color: #a0a0ab;
+    margin-bottom: 15px;
+  }
+
+  .game-stats {
+    display: flex;
+    justify-content: space-around;
+    background: #1a1a20;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .game-stats strong {
+    color: #00ff88;
+  }
+
+  .canvas-container {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    background: #000;
+    border-radius: 8px;
+    border: 2px solid #333;
+  }
+
+  canvas {
+    cursor: crosshair;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .game-controls {
+    margin-top: 15px;
+  }
+
+  #reset-btn {
+    background: #ff3e3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  #reset-btn:hover {
+    background: #d62828;
+  }
+
+  .game-message {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  .game-message.win {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+  }
+
+  .game-message.lose {
+    background: rgba(255, 62, 62, 0.15);
+    color: #ff3e3e;
+    border: 1px solid #ff3e3e;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('spot-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  let foundDifferences = [];
+  let timeLeft = 30;
+  let timerInterval = null;
+  let isGameOver = false;
+
+  // Koordinat 4 perbedaan di sisi kanan (offset X +300)
+  const differences = [
+    { x: 380, y: 150, r: 25, found: false, name: "Spoiler Hilang" },
+    { x: 500, y: 70,  r: 25, found: false, name: "Warna Bendera Berbeda" },
+    { x: 440, y: 220, r: 25, found: false, name: "Ban Belakang Hilang" },
+    { x: 550, y: 180, r: 25, found: false, name: "Bintang di Langit Tambahan" }
+  ];
+
+  function drawScene() {
+    // Clear Canvas
+    ctx.fillStyle = "#1a1a24";
+    ctx.fillRect(0, 0, 600, 300);
+
+    // Garis Pemisah Kiri & Kanan
+    ctx.strokeStyle = "#ff3e3e";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(300, 0);
+    ctx.lineTo(300, 300);
+    ctx.stroke();
+
+    // --- GAMBAR SISI KIRI (ASLI) ---
+    drawTrack(0);
+    drawCar(0, true, true, false); // full car
+    drawFlag(0, "#00ff88"); // bendera hijau
+    drawStars(0, false);
+
+    // --- GAMBAR SISI KANAN (ADA 4 PERBEDAAN) ---
+    drawTrack(300);
+    drawCar(300, false, false, false); // PERBEDAAN 1 (tanpa spoiler), PERBEDAAN 3 (tanpa ban belakang)
+    drawFlag(300, "#ff9900"); // PERBEDAAN 2 (bendera oranye)
+    drawStars(300, true); // PERBEDAAN 4 (ada bintang ekstra)
+
+    // Gambar Lingkaran Penanda jika berhasil ditemukan
+    differences.forEach(diff => {
+      if (diff.found) {
+        drawCircle(diff.x, diff.y);
+        drawCircle(diff.x - 300, diff.y); // Lingkaran di sisi kiri juga
+      }
+    });
+  }
+
+  function drawTrack(offsetX) {
+    // Langit
+    ctx.fillStyle = "#0d0d14";
+    ctx.fillRect(offsetX, 0, 300, 180);
+    
+    // Track/Lasan
+    ctx.fillStyle = "#2c2c36";
+    ctx.fillRect(offsetX, 180, 300, 120);
+
+    // Kerb Balap (Merah Putih)
+    for (let i = 0; i < 300; i += 30) {
+      ctx.fillStyle = (i / 30) % 2 === 0 ? "#ff3e3e" : "#ffffff";
+      ctx.fillRect(offsetX + i, 175, 30, 10);
+    }
+  }
+
+  function drawCar(offsetX, hasSpoiler, hasBackWheel, extra) {
+    // Body Mobil
+    ctx.fillStyle = "#ff2233";
+    ctx.beginPath();
+    ctx.roundRect(offsetX + 80, 190, 140, 35, 10);
+    ctx.fill();
+
+    // Kokpit
+    ctx.fillStyle = "#111";
+    ctx.beginPath();
+    ctx.arc(offsetX + 140, 190, 18, Math.PI, 0);
+    ctx.fill();
+
+    // Spoiler (Perbedaan 1)
+    if (hasSpoiler) {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(offsetX + 70, 170, 15, 25);
+      ctx.fillRect(offsetX + 60, 168, 30, 6);
+    }
+
+    // Roda Depan
+    ctx.fillStyle = "#444";
+    ctx.beginPath();
+    ctx.arc(offsetX + 190, 225, 16, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Roda Belakang (Perbedaan 3)
+    if (hasBackWheel) {
+      ctx.beginPath();
+      ctx.arc(offsetX + 110, 225, 16, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawFlag(offsetX, color) {
+    // Perbedaan 2: Warna Bendera
+    ctx.strokeStyle = "#aaa";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(offsetX + 200, 90);
+    ctx.lineTo(offsetX + 200, 160);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(offsetX + 200, 90);
+    ctx.lineTo(offsetX + 240, 105);
+    ctx.lineTo(offsetX + 200, 120);
+    ctx.fill();
+  }
+
+  function drawStars(offsetX, hasExtraStar) {
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(offsetX + 40, 40, 3, 3);
+    ctx.fillRect(offsetX + 120, 60, 4, 4);
+
+    // Perbedaan 4: Bintang Ekstra
+    if (hasExtraStar) {
+      ctx.fillStyle = "#ffea00";
+      ctx.fillRect(offsetX + 250, 50, 6, 6);
+    }
+  }
+
+  function drawCircle(x, y) {
+    ctx.strokeStyle = "#00ff88";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x, y, 22, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  canvas.addEventListener('click', function(e) {
+    if (isGameOver) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    const clickX = (e.clientX - rect.left) * scaleX;
+    const clickY = (e.clientY - rect.top) * scaleY;
+
+    // Normalisasi klik (apabila mengklik gambar kiri, disesuaikan ke koordinat kanan)
+    const normalizedX = clickX < 300 ? clickX + 300 : clickX;
+
+    differences.forEach(diff => {
+      if (!diff.found) {
+        const dist = Math.hypot(normalizedX - diff.x, clickY - diff.y);
+        if (dist < diff.r) {
+          diff.found = true;
+          checkProgress();
         }
+      }
+    });
 
-        function playEngineSound() {
-            initAudio();
-            if (!audioCtx) return;
+    drawScene();
+  });
 
-            const now = audioCtx.currentTime;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
+  function checkProgress() {
+    const foundCount = differences.filter(d => d.found).length;
+    document.getElementById('found-count').innerText = foundCount;
 
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(100, now);
-            osc.frequency.exponentialRampToValueAtTime(600, now + 0.6);
-            osc.frequency.exponentialRampToValueAtTime(200, now + 1.1);
+    if (foundCount === differences.length) {
+      endGame(true);
+    }
+  }
 
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('game-timer').innerText = timeLeft;
 
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+      if (timeLeft <= 0) {
+        endGame(false);
+      }
+    }, 1000);
+  }
 
-            osc.start(now);
-            osc.stop(now + 1.2);
+  function endGame(isWin) {
+    clearInterval(timerInterval);
+    isGameOver = true;
+    const msgBox = document.getElementById('game-message');
+    msgBox.classList.remove('hidden', 'win', 'lose');
 
-            setTimeout(() => {
-                osc.disconnect();
-                gain.disconnect();
-            }, 1250);
-        }
+    if (isWin) {
+      msgBox.classList.add('win');
+      msgBox.innerText = `VICTORY! Kamu menemukan semua perbedaan dalam ${30 - timeLeft} detik!`;
+    } else {
+      msgBox.classList.add('lose');
+      msgBox.innerText = "TIME OUT! Waktu habis, coba lagi yuk!";
+    }
+  }
 
-        function openSurprise() {
-            initAudio();
-            playEngineSound();
-            createConfetti();
-            updateConfetti();
+  function initSpotGame() {
+    clearInterval(timerInterval);
+    timeLeft = 30;
+    isGameOver = false;
+    differences.forEach(d => d.found = false);
 
-            document.getElementById('nav-controls').style.display = 'flex';
-            goToPage(1);
-        }
+    document.getElementById('found-count').innerText = "0";
+    document.getElementById('game-timer').innerText = timeLeft;
+    
+    const msgBox = document.getElementById('game-message');
+    msgBox.classList.add('hidden');
 
-        function goToPage(pageNumber) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            currentPage = pageNumber;
-            document.getElementById(`page-${currentPage}`).classList.add('active');
+    drawScene();
+    startTimer();
+  }
 
-            // Update Nav Controls
-            document.getElementById('page-indicator').innerText = `${currentPage} / ${totalPages}`;
-            document.getElementById('btn-prev').disabled = (currentPage === 1);
-            document.getElementById('btn-next').disabled = (currentPage === totalPages);
-
-            if (currentPage !== 5 && isOtRunning) {
-                isOtRunning = false;
-            }
-        }
-
-        function changePage(direction) {
-            const targetPage = currentPage + direction;
-            if (targetPage >= 1 && targetPage <= totalPages) {
-                goToPage(targetPage);
-            }
-        }
-
-        // RADIO MESSAGE
-        function playRadioMessage() {
-            document.getElementById('radio-box').style.display = 'block';
-            const player = document.getElementById('radio-player');
-            player.currentTime = 0;
-            player.play().catch(err => console.error("Gagal memutar audio:", err));
-        }
-
-        // PIT STOP GAME
-        let gameState = 'idle'; 
-        let startTime, timerId;
-
-        function handleGameClick() {
-            initAudio();
-            const btn = document.getElementById('game-btn');
-            const result = document.getElementById('game-result');
-            const lights = document.querySelectorAll('#page-3 .game-light');
-
-            if (gameState === 'idle') {
-                gameState = 'waiting';
-                btn.innerText = 'WAIT FOR LIGHTS OUT...';
-                result.innerText = '';
-                
-                let lightIndex = 0;
-                lights.forEach(l => l.classList.remove('active'));
-
-                timerId = setInterval(() => {
-                    if (lightIndex < 5) {
-                        lights[lightIndex].classList.add('active');
-                        lightIndex++;
-                    } else {
-                        clearInterval(timerId);
-                        const randomDelay = Math.random() * 2000 + 1000;
-                        setTimeout(() => {
-                            lights.forEach(l => l.classList.remove('active'));
-                            gameState = 'ready';
-                            startTime = Date.now();
-                            btn.innerText = 'RELEASE NOW! 🏁';
-                        }, randomDelay);
-                    }
-                }, 800);
-
-            } else if (gameState === 'waiting') {
-                clearInterval(timerId);
-                lights.forEach(l => l.classList.remove('active'));
-                gameState = 'idle';
-                btn.innerText = 'TRY AGAIN';
-                result.innerText = '❌ Jump Start! Jangan buru-buru.';
-            } else if (gameState === 'ready') {
-                const reactionTime = ((Date.now() - startTime) / 1000).toFixed(3);
-                gameState = 'idle';
-                btn.innerText = 'PLAY AGAIN';
-                result.innerText = `⚡ Pit Stop Time: ${reactionTime}s! World Class! 🏆`;
-                createConfetti();
-                updateConfetti();
-            }
-        }
-
-        // CHAMPAGNE POP
-        function popChampagne() {
-            sprayCount++;
-            document.getElementById('spray-counter').innerText = `Semprotan: ${sprayCount}x 🥂`;
-
-            const bottle = document.getElementById('bottle');
-            bottle.classList.add('bottle-shake');
-            setTimeout(() => bottle.classList.remove('bottle-shake'), 200);
-
-            createConfetti();
-            updateConfetti();
-        }
-
-        // OVERTAKE GAME LOGIC (BALANCED SPEED MODE)
-        const otCanvas = document.getElementById('gameCanvas');
-        const otCtx = otCanvas.getContext('2d');
-        let playerLane = 1; // 0: Kiri, 1: Tengah, 2: Kanan
-        let laneX = [35, 110, 185];
-        let obstacles = [];
-        let otScore = 0;
-        let isOtRunning = false;
-        let otAnimId;
-
-        function startOvertakeGame() {
-            initAudio();
-            playerLane = 1;
-            obstacles = [];
-            otScore = 0;
-            isOtRunning = true;
-            document.getElementById('ot-status').innerText = 'Score: 0';
-            document.getElementById('ot-start-btn').innerText = 'RESTART RACE';
-            
-            if (otAnimId) cancelAnimationFrame(otAnimId);
-            runOvertakeLoop();
-        }
-
-        function moveCar(dir) {
-            if (!isOtRunning) return;
-            if (dir === 'left' && playerLane > 0) playerLane--;
-            if (dir === 'right' && playerLane < 2) playerLane++;
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (currentPage === 5 && isOtRunning) {
-                if (e.key === 'ArrowLeft') moveCar('left');
-                if (e.key === 'ArrowRight') moveCar('right');
-            }
-        });
-
-        function runOvertakeLoop() {
-            if (!isOtRunning) return;
-
-            otCtx.clearRect(0, 0, otCanvas.width, otCanvas.height);
-
-            // Draw Lanes
-            otCtx.strokeStyle = '#30363d';
-            otCtx.setLineDash([8, 8]);
-            otCtx.beginPath();
-            otCtx.moveTo(73, 0); otCtx.lineTo(73, otCanvas.height);
-            otCtx.moveTo(146, 0); otCtx.lineTo(146, otCanvas.height);
-            otCtx.stroke();
-            otCtx.setLineDash([]);
-
-            // Spawn Obstacles (Kecepatan & Rata-rata kemunculan yang Pas)
-            if (Math.random() < 0.025) {
-                const randomLane = Math.floor(Math.random() * 3);
-                if (!obstacles.some(o => o.y < 60)) {
-                    obstacles.push({ lane: randomLane, y: -30, speed: 1.8 }); // Kecepatan diset 1.8
-                }
-            }
-
-            // Draw Player Car
-            otCtx.font = '20px Segoe UI Emoji';
-            otCtx.textAlign = 'center';
-            otCtx.fillText('🏎️', laneX[playerLane], 160);
-
-            // Update & Draw Obstacles
-            for (let i = 0; i < obstacles.length; i++) {
-                let obs = obstacles[i];
-                obs.y += obs.speed;
-                otCtx.fillText('🚙', laneX[obs.lane], obs.y);
-
-                // Collision Detection
-                if (obs.lane === playerLane && obs.y > 140 && obs.y < 165) {
-                    isOtRunning = false;
-                    document.getElementById('ot-status').innerText = `💥 Crash! Final Score: ${otScore}`;
-                    return;
-                }
-
-                // Passed Obstacle
-                if (obs.y > 190) {
-                    obstacles.splice(i, 1);
-                    i--;
-                    otScore += 10;
-                    document.getElementById('ot-status').innerText = `Score: ${otScore}`;
-                }
-            }
-
-            otAnimId = requestAnimationFrame(runOvertakeLoop);
-        }
-
-        // WISHES BOARD
-        function addWish() {
-            const input = document.getElementById('wish-input');
-            const list = document.getElementById('wish-list');
-            
-            if (input.value.trim() !== '') {
-                const item = document.createElement('div');
-                item.className = 'wish-item';
-                item.innerText = input.value;
-                list.prepend(item);
-                input.value = '';
-            }
-        }
-
-        // CONFETTI EFEK
-        const canvas = document.getElementById('confetti');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        resizeCanvas();
-
-        function createConfetti() {
-            particles = [];
-            const colors = ['#e10600', '#00d2be', '#ffffff', '#ffd700', '#00ffcc'];
-            for (let i = 0; i < 70; i++) {
-                particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 16,
-                    vy: (Math.random() - 0.5) * 16,
-                    size: Math.random() * 6 + 4,
-                    color: colors[Math.floor(Math.random() * colors.length)]
-                });
-            }
-        }
-
-        function updateConfetti() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, index) => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.2;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-
-                if (p.y > canvas.height) particles.splice(index, 1);
-            });
-            if (particles.length > 0) requestAnimationFrame(updateConfetti);
-        }
-    </script>
-</body>
-</html>
+  // Mulai game saat dimuat
+  initSpotGame();
+</script>
