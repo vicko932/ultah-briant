@@ -442,11 +442,11 @@
             </div>
         </div>
 
-        <!-- PAGE 5: OVERTAKE GAME (NEW) -->
+        <!-- PAGE 5: OVERTAKE GAME (EASY MODE) -->
         <div id="page-5" class="page">
             <div class="feature-card">
                 <div class="section-title">🏎️ Overtake Master Challenge</div>
-                <div class="section-desc">Hindari mobil lambat di lintasan balap! Gunakan tombol KIRI / KANAN atau panah keyboard untuk beralih jalur!</div>
+                <div class="section-desc">Hindari mobil lambat di lintasan balap! Gunakan tombol KIRI / KANAN untuk beralih jalur!</div>
                 
                 <canvas id="gameCanvas" width="220" height="180"></canvas>
                 <div id="ot-status" class="game-result">Score: 0</div>
@@ -626,7 +626,7 @@
             updateConfetti();
         }
 
-        // OVERTAKE GAME LOGIC
+        // OVERTAKE GAME LOGIC (EASY MODE)
         const otCanvas = document.getElementById('gameCanvas');
         const otCtx = otCanvas.getContext('2d');
         let playerLane = 1; // 0: Kiri, 1: Tengah, 2: Kanan
@@ -676,27 +676,27 @@
             otCtx.stroke();
             otCtx.setLineDash([]);
 
-            // Spawn Obstacles
-            if (Math.random() < 0.035) {
+            // Spawn Obstacles Lebih Jarang (Easy Mode)
+            if (Math.random() < 0.018) {
                 const randomLane = Math.floor(Math.random() * 3);
-                if (!obstacles.some(o => o.y < 50 && o.lane === randomLane)) {
-                    obstacles.push({ lane: randomLane, y: -30, speed: 2.5 + Math.random() });
+                if (!obstacles.some(o => o.y < 80)) {
+                    obstacles.push({ lane: randomLane, y: -30, speed: 1.2 }); // Speed diturunkan ke 1.2
                 }
             }
 
-            // Draw Player Car (Emoji 🏎️)
-            otCtx.font = '24px Segoe UI Emoji';
+            // Draw Player Car (Ukuran font lebih pas)
+            otCtx.font = '20px Segoe UI Emoji';
             otCtx.textAlign = 'center';
             otCtx.fillText('🏎️', laneX[playerLane], 160);
 
-            // Update & Draw Obstacles (Emoji 🚙)
+            // Update & Draw Obstacles
             for (let i = 0; i < obstacles.length; i++) {
                 let obs = obstacles[i];
                 obs.y += obs.speed;
                 otCtx.fillText('🚙', laneX[obs.lane], obs.y);
 
-                // Collision Detection
-                if (obs.lane === playerLane && obs.y > 135 && obs.y < 170) {
+                // Area Tabrakan Lebih Toleran (Lebih Susah Kena Hitbox)
+                if (obs.lane === playerLane && obs.y > 145 && obs.y < 165) {
                     isOtRunning = false;
                     document.getElementById('ot-status').innerText = `💥 Crash! Final Score: ${otScore}`;
                     return;
