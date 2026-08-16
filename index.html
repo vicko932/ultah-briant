@@ -442,7 +442,7 @@
             </div>
         </div>
 
-        <!-- PAGE 5: OVERTAKE GAME (EASY MODE) -->
+        <!-- PAGE 5: OVERTAKE GAME (BALANCED SPEED MODE) -->
         <div id="page-5" class="page">
             <div class="feature-card">
                 <div class="section-title">🏎️ Overtake Master Challenge</div>
@@ -626,7 +626,7 @@
             updateConfetti();
         }
 
-        // OVERTAKE GAME LOGIC (EASY MODE)
+        // OVERTAKE GAME LOGIC (BALANCED SPEED MODE)
         const otCanvas = document.getElementById('gameCanvas');
         const otCtx = otCanvas.getContext('2d');
         let playerLane = 1; // 0: Kiri, 1: Tengah, 2: Kanan
@@ -676,15 +676,15 @@
             otCtx.stroke();
             otCtx.setLineDash([]);
 
-            // Spawn Obstacles Lebih Jarang (Easy Mode)
-            if (Math.random() < 0.018) {
+            // Spawn Obstacles (Kecepatan & Rata-rata kemunculan yang Pas)
+            if (Math.random() < 0.025) {
                 const randomLane = Math.floor(Math.random() * 3);
-                if (!obstacles.some(o => o.y < 80)) {
-                    obstacles.push({ lane: randomLane, y: -30, speed: 1.2 }); // Speed diturunkan ke 1.2
+                if (!obstacles.some(o => o.y < 60)) {
+                    obstacles.push({ lane: randomLane, y: -30, speed: 1.8 }); // Kecepatan diset 1.8
                 }
             }
 
-            // Draw Player Car (Ukuran font lebih pas)
+            // Draw Player Car
             otCtx.font = '20px Segoe UI Emoji';
             otCtx.textAlign = 'center';
             otCtx.fillText('🏎️', laneX[playerLane], 160);
@@ -695,8 +695,8 @@
                 obs.y += obs.speed;
                 otCtx.fillText('🚙', laneX[obs.lane], obs.y);
 
-                // Area Tabrakan Lebih Toleran (Lebih Susah Kena Hitbox)
-                if (obs.lane === playerLane && obs.y > 145 && obs.y < 165) {
+                // Collision Detection
+                if (obs.lane === playerLane && obs.y > 140 && obs.y < 165) {
                     isOtRunning = false;
                     document.getElementById('ot-status').innerText = `💥 Crash! Final Score: ${otScore}`;
                     return;
